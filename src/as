@@ -31,6 +31,124 @@
     OWNER
   }
 
+
+
+  interface Location {
+    country: String
+    state: String
+    city: String
+    street: String
+    house: String
+    room: String
+    zip: String
+  }
+  
+  type Address implements Location {
+    id: ID!
+    Email: String
+    Phone: String
+  }
+
+  type Destination implements Location {
+    id: ID!
+    refConsumer: ID
+    projects: [Project]
+  }
+  
+  
+  
+  type Face {
+    id: ID!
+    firstName: String
+    lastName: String
+    position: POSITION
+    company: ID!
+    Email: String
+    Phone: String
+  }
+  
+  
+  
+  interface Company {
+    name: String
+    regNr: String
+    Email: String
+    Phone: String
+  }
+  
+  type Customer implements Company {
+    id: ID!
+    address: ID!
+    ? value: Float
+    ? profit: Float
+    projects: [Project]
+  }
+  
+  type Consumer implements Company {
+    id: ID!
+    address: ID!
+    ? value: Float
+    ? profit: Float
+    projects: [Project]
+  }
+
+  type Supplier implements Company {
+    id: ID!
+    address: ID!
+    ? value: Float
+    ? profit: Float
+    stockPosns: [StockPos]
+    projects: [Project]
+  }
+
+  type Subsupplier implements Company {
+    id: ID!
+    address: ID!
+    ? value: Float
+    ? profit: Float
+    ? stockPosns: [StockPos]
+    projects: [Project]
+  }
+
+
+  interface Document {
+    dateIssued: Date
+  }
+  
+  type SalesInvoice implements Traceable, Document {
+    id: ID!
+    dateDue: Date
+    value: Float
+  }
+
+  type PurchInvoice implements Traceable, Document {
+    id: ID!
+    dateDue: Date
+    costTotal: Float
+    costDelivery: Float
+    dateArr: Date
+  }
+
+  type Quote implements Traceable, Document {
+    id: ID!
+    dateValid: Date
+    value: Float
+    salesItems: [SalesItem]
+    salesSets: [SalesSet]
+  }
+
+  type PackList implements Document {
+    id: ID!
+    
+  }
+
+  type PurchaseOrder implements Document {
+    id: ID!
+    
+  }
+
+
+
   interface Traceable {
     refProject: ID
     refOrder: ID
@@ -57,107 +175,7 @@
     dateCompleted: Date
     dateSent: Date
   }
-
-
-
-  interface Company {
-    name: String
-    regNr: String
-    Email: String
-    Phone: String
-  }
-
-  interface Location {
-    country: String
-    state: String
-    city: String
-    street: String
-    house: String
-    room: String
-    zip: String
-  }
   
-  type Face {
-    id: ID!
-    firstName: String
-    lastName: String
-    position: POSITION
-    company: ID!
-    Email: String
-    Phone: String
-  }
-
-  type Customer implements Company {
-    id: ID!
-    address: ID!
-    ? value: Float
-    ? profit: Float
-    projects: [Project]
-  }
-
-  type Address implements Location {
-    id: ID!
-    Email: String
-    Phone: String
-  }
-
-  type Destination implements Location {
-    id: ID!
-    refConsumer: ID
-    projects: [Project]
-  }
-
-  type Consumer implements Company {
-    id: ID!
-    address: ID!
-    ? value: Float
-    ? profit: Float
-    projects: [Project]
-  }
-
-  type Supplier implements Company {
-    id: ID!
-    address: ID!
-    ? value: Float
-    ? profit: Float
-    ? stockPosns: [StockPos]
-    projects: [Project]
-  }
-
-  type Subsupplier implements Company {
-    
-  }
-
-  interface Document {
-    dateIssued: Date
-  }
-  
-  type SalesInvoice implements Traceable, Document {
-    dateDue: Date
-    value: Float
-    dateSent: Date
-  }
-
-  type PurchInvoice implements Traceable, Document {
-    dateDue: Date
-    costTotal: Float
-    costDelivery: Float
-    dateArr: Date
-  }
-
-  type Quote implements Document {
-    
-  }
-
-  type PackList implements Document {
-    
-  }
-
-  type PurchaseOrder implements Document {
-    
-  }
-
-
   type StockItem implements Traceable, Item {
     id: ID!
     refPurch: ID
@@ -180,7 +198,7 @@
     refStock: ID
     suppliers: [Supplier]
     costEstim: Float
-    costInfo: CostInfo
+    costInfos: [CostInfo]
     stockItems: [StockItem]
     salesItems: [SalesItem]
     salesSets: [SalesSet]
@@ -194,7 +212,6 @@
     cost: Float
     isCostExtraOrd: Boolean
   }
-
 
   type SalesItem implements Traceable, Business, Item {
     id: ID!
