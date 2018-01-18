@@ -78,9 +78,8 @@
   
   type Customer implements Company {
     id: ID!
-    address: ID!
-    ? value: Float
-    ? profit: Float
+    ? valueAcc: Float
+    ? profitAcc: Float
     products: [Product]
     projects: [Project]
     invoices: [Invoice]
@@ -90,26 +89,25 @@
   
   type Consumer implements Company {
     id: ID!
-    address: ID!
-    ? value: Float
-    ? profit: Float
+    ? valueAcc: Float
+    ? profitAcc: Float
     projects: [Project]
     ? destinations: [Destination]
   }
 
   type Supplier implements Company {
     id: ID!
-    address: ID!
-    ? value: Float
-    ? profit: Float
+    ? valueAcc: Float
+    ? costAcc: Float
+    ? profitAcc: Float
     stockPosns: [StockPos]
     projects: [Project]
   }
 
   type Subsupplier implements Company {
     id: ID!
-    address: ID!
     ? value: Float
+    ? costAcc: Float
     ? profit: Float
     ? stockPosns: [StockPos]
     projects: [Project]
@@ -119,6 +117,7 @@
 
   interface Document {
     dateIssued: Date
+    format: String
   }
   
   type SalesInvoice implements Traceable, Document {
