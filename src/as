@@ -1,0 +1,171 @@
+  scalar Date
+
+  enum ITEM_TYPE {
+    CONSUMABLE
+    PART
+    MATERIAL
+    EQUIPMENT
+  }
+
+  enum PRODUCT_TYPE {
+    PUMP
+    HATCH
+    BUNKER
+    CABINET
+    SHREDDER
+  }
+
+  enum UNITS {
+    METERS
+    KG
+    PCS
+  }
+
+  interface Traceable {
+    refProject: ID
+    refOrder: ID
+    refQuot: ID
+    refInv: ID
+    refPackL: ID
+    refDest: ID
+    refCustomer: ID
+    refConsumer: ID
+    refProduct: ID
+  }
+
+  interface Business {
+    price: Float
+    cost: Float
+    profit: Float
+  }
+
+  interface Item {
+    type: ITEM_TYPE
+    name: String
+    qty: Int
+    units: UNITS
+    dateCompleted: Date
+    dateSent: Date
+  }
+
+  interface Document {
+
+  }
+
+  interface Invoice {
+
+  }
+
+  interface Company {
+
+  }
+
+  interface Location {
+
+  }
+
+
+  type Customer implements Company {
+
+  }
+
+  type Address implements Location {
+    
+  }
+
+  type Destination implements Location {
+
+  }
+
+  type Consumer implements Company {
+
+  }
+
+  type Supplier implements Company {
+
+  }
+
+  type Subsupplier implements Company {
+
+  }
+
+
+  type SalesInvoice implements Invoice, Document {
+
+  }
+
+  type PurchInvoice implements Invoice, Document {
+
+  }
+
+  type Quote implements Document {
+
+  }
+
+  type PackList implements Document {
+
+  }
+
+  type PurchaseOrder implements Document {
+
+  }
+
+
+  type StockItem implements Traceable, Item {
+    id: ID!
+    refPurch: ID
+    refSalesItem: ID
+    refSupplier: ID
+    refStock: ID
+    refSubsupplier: ID
+    refOrigin: ID
+    nrCE: String
+    nrID: String
+    nrSerial: String
+    dateArr: Date
+    cost: Float
+    refStockPos: ID
+    isCostExtra: Boolean
+    isOnStock: Boolean
+  }
+
+
+  type SalesItem implements Traceable, Business, Item {
+    id: ID!
+    refSet: ID
+    stockItems: [StockItem]
+    refStockItem: ID
+    childrenItems: [SalesItems]
+  }
+
+  type SalesSet implements Traceable, Business, Item {
+    id: ID!
+    salesItems: [SalesItem]
+  }
+
+  type Product implements Traceable, Business, Item {
+    id: ID!
+    salesSets: [SalesSet]
+    salesItems: [SalesItem]
+    weight: Int
+    length: Int
+    height: Int
+    width: Int
+    productType: PRODUCT_TYPE
+  }
+
+  type Project implements Traceable, Business {
+    id: ID!
+    nr: String
+    name: String
+    refCustomer: ID
+    refConsumer: ID
+    refDestination
+    refProjectMan: ID
+    refSalesMan: ID
+    value: Float
+    cost: Float
+    profit: Float
+    dateCompleted: Date
+    guaranteeMonths: Int
+  }
