@@ -193,7 +193,6 @@
   }
   
   interface Pos {
-    type: ITEM_TYPE
     name: String
     weight: Int
     qtyInit: Int
@@ -226,6 +225,7 @@
   
   type StockItem implements Traceable, Item {
     id: ID!
+    type: ITEM_TYPE
     refPurch: ID
     refSalesItem: ID
     refSupplier: ID
@@ -244,6 +244,7 @@
   
   type StockPos implements Pos {
     id: ID!
+    type: ITEM_TYPE
     refStock: ID
     costEstim: Float
     costInfos: [CostInfo]
@@ -252,6 +253,7 @@
 
   type SalesItem implements Traceable, Business, Item {
     id: ID!
+    type: ITEM_TYPE
     refSet: ID
     stockItems: [StockItem]
     refStockItem: ID
@@ -260,6 +262,7 @@
   
   type SalesItemPos implements Pos {
     id: ID!
+    type: ITEM_TYPE
     valueEstim: Float
     valueInfos: [ValueInfo]
   }
@@ -267,35 +270,38 @@
 
   type SalesSet implements Traceable, Business, Item {
     id: ID!
+    type: PRODUCT_TYPE
     salesItems: [SalesItem]
   }
   
   typeSasesSetPos implements Pos {
     id: ID!
+    type: PRODUCT_TYPE
     valueEstim: Float
     valueInfos: [ValueInfo]
+    type: PRODUCT_TYPE
   }
 
 
   type Product implements Traceable, Business, Item {
     id: ID!
+    type: PRODUCT_TYPE
     salesSets: [SalesSet]
     salesItems: [SalesItem]
     weight: Int
     length: Int
     height: Int
     width: Int
-    productType: PRODUCT_TYPE
   }
   
   type ProductPos implements Pos {
     id: ID!
+    type: PRODUCT_TYPE
     valueEstim: Float
     valueInfos: [ValueInfo]
     length: Int
     height: Int
     width: Int
-    productType: PRODUCT_TYPE
   }
 
 
