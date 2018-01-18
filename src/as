@@ -53,6 +53,7 @@
     id: ID!
     refConsumer: ID
     projects: [Project]
+    packLists: [PackList]
   }
   
   
@@ -62,7 +63,7 @@
     firstName: String
     lastName: String
     position: POSITION
-    company: ID!
+    company: ID
     Email: String
     Phone: String
   }
@@ -72,8 +73,7 @@
   interface Company {
     name: String
     regNr: String
-    Email: String
-    Phone: String
+    address: Address
   }
   
   type Customer implements Company {
@@ -81,7 +81,11 @@
     address: ID!
     ? value: Float
     ? profit: Float
+    products: [Product]
     projects: [Project]
+    invoices: [Invoice]
+    purchaseOrders: [PurchaseOrder]
+    destinations: [Destination]
   }
   
   type Consumer implements Company {
@@ -90,6 +94,7 @@
     ? value: Float
     ? profit: Float
     projects: [Project]
+    ? destinations: [Destination]
   }
 
   type Supplier implements Company {
@@ -109,6 +114,7 @@
     ? stockPosns: [StockPos]
     projects: [Project]
   }
+
 
 
   interface Document {
@@ -137,14 +143,23 @@
     salesSets: [SalesSet]
   }
 
-  type PackList implements Document {
+  type PackList implements Traceable, Document {
     id: ID!
-    
+    dateSent: Date
+    salesItems: [SalesItem]
+    salesSets: [SalesSet]
+    products: [Product]
+    ? data: [{},{}]
   }
-
+  
   type PurchaseOrder implements Document {
     id: ID!
-    
+    dateDue: Date
+    value: Float
+    salesItems: [SalesItem]
+    salesSets: [SalesSet]
+    products: [Product]
+    ? data: [{},{}]
   }
 
 
@@ -170,11 +185,44 @@
   interface Item {
     type: ITEM_TYPE
     name: String
+    weight: Int
     qty: Int
     units: UNITS
     dateCompleted: Date
     dateSent: Date
   }
+  
+  interface Pos {
+    type: ITEM_TYPE
+    name: String
+    weight: Int
+    qtyInit: Int
+    units: UNITS
+    suppliers: [Supplier]
+    subSuppliers: [Subsupplier]
+    stockItems: [StockItem]
+    salesItems: [SalesItem]
+    salesSets: [SalesSet]
+    products: [Product]
+    projects: [Project]
+    customers: [Customer]
+    consumers: [Consumer]
+  }
+  
+  type CostInfo {
+    id: ID!
+    costDate: Date
+    cost: Float
+    isCostExtraOrd: Boolean
+  }
+  
+  type ValueInfo {
+    id: ID!
+    valueDate: Date
+    value: Float
+    isValueExtraOrd: Boolean
+  }
+  
   
   type StockItem implements Traceable, Item {
     id: ID!
@@ -194,24 +242,13 @@
     isOnStock: Boolean
   }
   
-  type StockPos implements Item {
+  type StockPos implements Pos {
+    id: ID!
     refStock: ID
-    suppliers: [Supplier]
     costEstim: Float
     costInfos: [CostInfo]
-    stockItems: [StockItem]
-    salesItems: [SalesItem]
-    salesSets: [SalesSet]
-    products: [Product]
-    projects: [Project]
-    customers: [Customer]
   }
-  
-  type CostInfo {
-    costDate: Date
-    cost: Float
-    isCostExtraOrd: Boolean
-  }
+
 
   type SalesItem implements Traceable, Business, Item {
     id: ID!
@@ -220,11 +257,25 @@
     refStockItem: ID
     childrenItems: [SalesItems]
   }
+  
+  type SalesItemPos implements Pos {
+    id: ID!
+    valueEstim: Float
+    valueInfos: [ValueInfo]
+  }
+
 
   type SalesSet implements Traceable, Business, Item {
     id: ID!
     salesItems: [SalesItem]
   }
+  
+  typeSasesSetPos implements Pos {
+    id: ID!
+    valueEstim: Float
+    valueInfos: [ValueInfo]
+  }
+
 
   type Product implements Traceable, Business, Item {
     id: ID!
@@ -236,6 +287,17 @@
     width: Int
     productType: PRODUCT_TYPE
   }
+  
+  type ProductPos implements Pos {
+    id: ID!
+    valueEstim: Float
+    valueInfos: [ValueInfo]
+    length: Int
+    height: Int
+    width: Int
+    productType: PRODUCT_TYPE
+  }
+
 
   type Project implements Traceable, Business {
     id: ID!
